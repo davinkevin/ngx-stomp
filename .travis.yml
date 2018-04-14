@@ -1,0 +1,35 @@
+language: node_js
+sudo: false
+node_js:
+- '8'
+
+env:
+- NPM_CONFIG_LOGLEVEL='warn'
+
+jobs:
+  include:
+  - stage: build library
+    script:
+    - yarn build
+  - stage: deploy library release
+    script: ignore
+    deploy:
+    - provider: releases
+      api_key:
+        secure: CbpeqtwZxsdRFQ5Fcch1ANHSJTtuulFQycQlrWz4ovcltnaVQwFzUwAjAQzr7Eu1CVP5/ljjYRpgKD6UI8ugfSiWG8jIADaVuE0dPv/p+KhrZ0C11d+IkLKqZCIW3/oWdpV5v4A25G1euVeigZWyrhEijhYo1Luga85BGHvb13WicnSVRFyqOXaxywSEFLmY5tCAyHvC7ZbAP4BEt3HdLUuVqKhC5bKMCP4+TKc8m8MNdzHR57bMvuFg31yU6726a5D83gFVmFSuHJI4GSSva+rNS2p8+aSpKpomDJ6KKeUputuk1Wcracext3BMRejCIwerdD8afANKA8w+CdE5mKzkY22hS/EaD210fCO9IEpOLQqgs0+2kGNSIpwe/CoXkMAh9jLC0GjStMLxLjZiqtCpEdfIDVGJXzk3X01yUJ/iJ2YIRwsZdom4lOaODbZgOyy7UXS86qrjHgBaWXB/prhIuy2cC6say+mL4bYMQEgpipLc8Yw6NQhQ6myh4TjjjhVeYxFdKW2WM/d/1EWqRAI2mO8qIkBisve2rYrR8+jdbhCzsGQMrB43USv3GLc7iPfrPNlKE3v90uz0qT4KRqsCC7UL67yxQkcXbfgoJdujR6L9b8RqCVLudNtRbwuq+/G6YxMuE53Fl4+AHuYK9ZR8PR31zSzUOg1VabtQ9BA=
+      file_glob: true
+      file: '*'
+      on:
+        repo: davinkevin/ngx-stomp
+        tags: true
+      skip_cleanup: true
+  - stage: publish library release
+    deploy:
+    - provider: npm
+      email: davin.kevin@gmail.com
+      api_key:
+        secure: d1DSRutZL7+adGRMFSFXOijxaOpXKEf80SqB7UDBxQJsFXR2LnDpC2CVVe17VKYTFeaUrh57pYsOZ/VRI7g4ratzTB1MF4PrBv/Zy/XvdvmsI+s6Akg3lUkmWcBOuE+fGkQtfpWkcuwneu4MsWlRuflMI6xGmziNxsLdUzvOpINUs9qyg2zpMQEbCngVgS5C8J2V4gXUcIbfDbqyWXkU6WneJ9MbxrAVgl+FbgDVs8tDimF+VaT6TJpNcL2cNnhAr5U5mejv9aHjy0BmpiGBjQBtg3ayGF44Qb/ZczPe7CKNcodl+8Z0IaQCtpGOC+HndtEOTcCLPYSXLGM236nBkJgaK4U3TVj14L0PYNbueQjcFpsqAMvMA2oayPLZ5oIaKPHNCXVH6pTPSzmRZwWgTm7Vr0ka9Z+bibjufMBMGBhwdmWEFfxjsha/54NpZL5ijxtIA5kthpqUUoOOmQPm7Xm6eHzq1X1Cn4ubhB8LzgzOpNQJuMsTbqu8avrJAFdlYLnjT79X+ifvSh+GlLcLtR9MuK7PdCbE4uWK0666AcaHa2xoHQjyzVwI9rRnQE7gR+9nXACSJg9yOlsRkQCxvMBazB3QJdJ5Uxbrs4+JkMwXXakbnw7A/JHjeg40nFgXIDyLyxTis9kadOBSOWOz06ekPbuBSgsls6IWMZJKj68=
+      on:
+        tags: true
+        repo: davinkevin/ngx-stomp
+      skip_cleanup: true
