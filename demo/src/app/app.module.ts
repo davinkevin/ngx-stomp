@@ -14,8 +14,8 @@ import {HttpClientModule} from '@angular/common/http';
     NgxStompModule.withConfig({
       login: 'login',
       password: 'password',
-      url: 'ws://localhost:8080/hello',
-      debug: false,
+      url: '/hello',
+      debug: true,
       vhost: 'foo',
       headers: {}
     })

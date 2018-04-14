@@ -8,7 +8,7 @@ export interface StompConfiguration {
   debug: boolean;
   vhost: string;
   headers: any;
-  over?: any;
+  over?: WebSocket;
 }
 
 export const STOMP_JS = new InjectionToken('STOMP_JS');

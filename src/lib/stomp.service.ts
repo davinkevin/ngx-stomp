@@ -5,6 +5,12 @@ import {Observable} from 'rxjs/Observable';
 import {concatMap, map, publishReplay} from 'rxjs/operators';
 import {OperatorFunction} from 'rxjs/interfaces';
 import {ConnectableObservable} from 'rxjs/observable/ConnectableObservable';
+import {DOCUMENT} from '@angular/common';
+
+export interface Stomp {
+  client: (url: string, protocols?: string | Array<string>) => Client;
+  over: (ws: WebSocket) => Client;
+}
 
 
 @Injectable()
@@ -13,9 +19,10 @@ export class StompService {
   private readonly connection$: Observable<Client>;
 
   constructor(@Inject(STOMP_CONFIGURATION) private conf: StompConfiguration,
-              @Inject(STOMP_JS) private Stomp: any) {
-
-    this.cl = initClient(Stomp, this.conf.over, this.conf.url);
+              @Inject(STOMP_JS) private stomp: Stomp,
+              @Inject(DOCUMENT) document: any
+  ) {
+    this.cl = initClient(stomp, this.conf.over, this.conf.url, document.location);
     this.cl.debug = initDebug(this.conf.debug);
 
     this.connection$ = initConnection(this.cl, this.conf);
@@ -44,8 +51,14 @@ function toJSON<T>(): OperatorFunction<Message, T> {
   return map((m: Message) => JSON.parse(m.body));
 }
 
-function initClient(Stomp: any, c: any, url: string): Client {
-  return c ? Stomp.over(c) : Stomp.client(url);
+function initClient(stomp: Stomp, c: WebSocket, url: string, loc: Location): Client {
+  if (c) {
+    return stomp.over(c);
+  }
+
+  const urlNormalized = normalizeUrl(url, loc);
+  console.log(urlNormalized);
+  return stomp.client(urlNormalized);
 }
 
 function initDebug(isActivated: boolean) {
@@ -65,4 +78,25 @@ function initConnection(client: Client, config: StompConfiguration): Observable<
   c$.connect();
 
   return c$;
+}
+
+function normalizeUrl(url: string, loc: Location): string {
+  if (url == null) {
+    throw new Error('No url found for web-socket');
+  }
+
+  if (url.startsWith('/')) {
+    return toWsProtocol(loc.protocol) + '//' + loc.hostname + ':' + loc.port + url;
+  }
+
+  try {
+    return new URL(url).toString();
+  } catch (e) {
+    console.error(e);
+    throw new Error(`Url with format ${url} not handle for now. Should be complete or start with /`);
+  }
+}
+
+function toWsProtocol(protocol: string): string {
+  return 'http:' === protocol ? 'ws:' : 'wss';
 }
