@@ -98,5 +98,5 @@ function normalizeUrl(url: string, loc: Location): string {
 }
 
 function toWsProtocol(protocol: string): string {
-  return 'http:' === protocol ? 'ws:' : 'wss';
+  return 'http:' === protocol ? 'ws:' : 'wss:';
 }
