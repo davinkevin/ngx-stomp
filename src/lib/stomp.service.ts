@@ -56,9 +56,7 @@ function initClient(stomp: Stomp, c: WebSocket, url: string, loc: Location): Cli
     return stomp.over(c);
   }
 
-  const urlNormalized = normalizeUrl(url, loc);
-  console.log(urlNormalized);
-  return stomp.client(urlNormalized);
+  return stomp.client(normalizeUrl(url, loc));
 }
 
 function initDebug(isActivated: boolean) {
