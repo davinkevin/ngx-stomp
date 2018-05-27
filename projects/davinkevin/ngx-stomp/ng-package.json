@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../../dist/davinkevin/ngx-stomp",
+  "deleteDestPath": false,
+  "whitelistedNonPeerDependencies": [
+    "webstomp-client"
+  ],
+  "lib": {
+    "entryFile": "src/public_api.ts"
+  }
+}
