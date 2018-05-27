@@ -1,6 +1,9 @@
 {
   "name": "@davinkevin/ngx-stomp",
   "version": "1.1.1",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "webstomp-client": "^1.2.0"
   },

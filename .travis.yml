@@ -6,6 +6,8 @@ node_js:
 cache:
   directories:
   - node_modules
+  - dist
+  - projects/davinkevin/ngx-stomp/node_modules/
 
 env:
 - NPM_CONFIG_LOGLEVEL='warn'
@@ -14,8 +16,15 @@ jobs:
   include:
   - stage: build library
     script:
+    - yarn --cwd projects/davinkevin/ngx-stomp/
+    - yarn lib:build
+    - yarn --cwd dist/davinkevin/ngx-stomp/
+  - stage: build demo
+    script:
     - yarn build
   - stage: publish library release
+    before_deploy:
+    - cd dist/davinkevin/ngx-stomp/
     deploy:
     - provider: npm
       email: davin.kevin@gmail.com
